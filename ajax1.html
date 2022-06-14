@@ -7,7 +7,11 @@
     <title>Ajax 1 - Text File</title>
 </head>
 <body>
-    <button id="button" type="button">Get text File</button>
+    <button id="button" type="button">Get text File</button><br><br>
+
+    <div id="text">
+
+    </div>
 
     <script>
         // Create event listerner
@@ -21,23 +25,34 @@
             // OPEN - type, url/file, async
              xhr.open("GET", 'sample.txt', true);
 
-             console.log("READYSTATE: ", xhr.readyState);
+
+            //  OPTIONAL - used for loaders
+             xhr.onprogress = function() {
+                console.log("READYSTATE: ", xhr.readyState);
+             }
 
             // new method
-            // xhr.onload = function() {
-            //     if (this.status == 200) {
+            xhr.onload = function() {
+                if (this.status == 200) {
+                    console.log(this.responseText);
+                    document.querySelector("#text").innerHTML = this.responseText;
+                }else if (this.status == 404) {
+                    document.querySelector("#text").innerHTML = "Not Found"
+                }
+            }
+
+            xhr.onerror = function() {
+                console.log("Request error: ", xhr.status)
+            }
+
+            // old method
+            // xhr.onreadystatechange = function() {
+            //     console.log("READYSTATE: ", xhr.readyState);
+
+            //     if (this.readyState == 4 && this.status == 200) {
             //         console.log(this.responseText);
             //     }
             // }
-
-            // old method
-            xhr.onreadystatechange = function() {
-                console.log("READYSTATE: ", xhr.readyState);
-
-                if (this.readyState == 4 && this.status == 200) {
-                    console.log(this.responseText);
-                }
-            }
 
             // Sends Request
             xhr.send();
